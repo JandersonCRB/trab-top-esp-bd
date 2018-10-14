@@ -9,7 +9,7 @@ def stores_dict():
     tree = ET.parse('./DB/products.xml')
     root = tree.getroot()
 
-    products = {}
+    stores = {}
     for product in root.findall('product'):
         node = product.find('razaoSocialName')
         if node is not None:
@@ -21,7 +21,7 @@ def stores_dict():
             SellPriceMax = product.find('SellPriceMax').text
             SellPriceMin = product.find('SellPriceMin').text
             longitudeNum = product.find('longitudeNum').text
-            products[razaoSocialName] = {'razaoSocialName': razaoSocialName,
+            stores[razaoSocialName] = {'razaoSocialName': razaoSocialName,
                                          'fantasiaName': fantasiaName,
                                          'neighborhood': neighborhood,
                                          'cepNum': cepNum,
@@ -29,7 +29,7 @@ def stores_dict():
                                          'SellPriceMax': SellPriceMax,
                                          'SellPriceMin': SellPriceMin,
                                          'latitudeNum': longitudeNum}
-    return products
+    return stores
 
 
 def main():

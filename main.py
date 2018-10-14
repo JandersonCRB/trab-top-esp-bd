@@ -1,5 +1,26 @@
+import xml.etree.ElementTree as ET
+
+
 def products_dict():
-    pass
+    tree      = ET.parse("./DB/products.xml")
+    root      = tree.getroot()
+    products  = root.findall('product')
+    product_dict = {}
+
+    for product in products:
+        id = product.find('id').text
+        description = product.find('description').text
+        SellPriceMax = product.find('SellPriceMax').text
+        SellPriceMin = product.find('SellPriceMin').text
+
+        product_dict[id] = { 'id'           : id,
+                             'description'  : description,
+                             'SellPriceMax' : SellPriceMax,
+                             'SellPriceMin' : SellPriceMin}
+
+    return product_dict
+
+
 
 
 def stores_dict():

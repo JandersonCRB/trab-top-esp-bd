@@ -1,9 +1,35 @@
+import xml.etree.ElementTree as ET
+
+
 def products_dict():
     pass
 
 
 def stores_dict():
-    pass
+    tree = ET.parse('./DB/products.xml')
+    root = tree.getroot()
+
+    products = {}
+    for product in root.findall('product'):
+        node = product.find('razaoSocialName')
+        if node is not None:
+            razaoSocialName = node.text
+            fantasiaName = product.find('fantasiaName').text
+            neighborhood = product.find('neighborhood').text
+            cepNum = product.find('cepNum').text
+            cityName = product.find('cityName').text
+            SellPriceMax = product.find('SellPriceMax').text
+            SellPriceMin = product.find('SellPriceMin').text
+            longitudeNum = product.find('longitudeNum').text
+            products[razaoSocialName] = {'razaoSocialName': razaoSocialName,
+                                         'fantasiaName': fantasiaName,
+                                         'neighborhood': neighborhood,
+                                         'cepNum': cepNum,
+                                         'cityName': cityName,
+                                         'SellPriceMax': SellPriceMax,
+                                         'SellPriceMin': SellPriceMin,
+                                         'latitudeNum': longitudeNum}
+    return products
 
 
 def main():

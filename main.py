@@ -1,3 +1,11 @@
+def products_dict():
+    pass
+
+
+def stores_dict():
+    pass
+
+
 def main():
     print("Hello World")
 

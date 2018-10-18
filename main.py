@@ -64,7 +64,12 @@ def save_stores_to_mongo(db):
         print("Tentativa de salvar objeto com chave duplicada no mongoDB.")
 
 
+def readUser():
+    print("Por favor digite seu nome de usuário:")
+
+
 def main():
+    readUser()
     client = pymongo.MongoClient(
         "mongodb://mongo:mongol@trab-top-esp-bd-shard-00-00-3bzqm.mongodb.net:27017,trab-top-esp-bd-shard-00-01-3bzqm.mongodb.net:27017,trab-top-esp-bd-shard-00-02-3bzqm.mongodb.net:27017/test?ssl=true&replicaSet=trab-top-esp-bd-shard-0&authSource=admin&retryWrites=true")
     client.test.stores.create_index([('razaoSocialName', pymongo.ASCENDING)], unique=True)

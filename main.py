@@ -6,7 +6,7 @@ import pymongo
 
 right_price_logo = "###################################################################################\n############                        RIGHT$PRICE                        ############\n###################################################################################"
 
-try: raw_input = input
+try: input = raw_input
 except NameError: pass
 
 def products_dict():
@@ -118,12 +118,12 @@ def search_product_menu():
     print("\n\n")
 
     print("Digite o nome do produto:\n")
-    product_name = raw_input()
+    product_name = input()
     products_list = search_product(product_name)
     for product in products_list:
         print(product)
     print("\nDigite o codigo do produto que deseja adicionar a sua lista de compras:")
-    product_id = raw_input()
+    product_id = input()
     add_product_to_shop_list(product_id)
 
 
@@ -133,7 +133,7 @@ def intro_menu():
     print("\n\n")
     print("Qual seu nome?")
 
-    nome = raw_input()
+    nome = input()
 
     return nome
 
@@ -157,7 +157,7 @@ def main():
               "1) Procurar produto\n"
               "2) Lista de Compras\n"
               "3) Sair")
-        resposta = raw_input()
+        resposta = input()
 
         if resposta == '1':
             search_product_menu()

@@ -1,10 +1,11 @@
+
 import xml.etree.ElementTree as ET
 import sys
+from User import User
+import migration
+import pymongo
+
 right_price_logo = "###################################################################################\n############                        RIGHT$PRICE                        ############\n###################################################################################"
-
-
-
-
 
 
 def products_dict():
@@ -25,28 +26,6 @@ def products_dict():
                              'SellPriceMin' : SellPriceMin}
 
     return product_dict
-
-def search_id_list(id_list):
-    result_list = []
-    tree = ET.parse("./DB/products.xml")
-    root = tree.getroot()
-    products = root.findall('product')
-    for product_id in id_list:
-        product = products.find('[id='+product_id+']')
-        description = product['description']
-        SellPriceMax = product['description']
-        SellPriceMin = product['description']
-        addressName = product['description']
-        fantasiaName = product['description']
-        neighborhood = product['description']
-        result_list.append({'id'              : products.id,
-                            'description'     : description,
-                            'SellPriceMax'    : SellPriceMax,
-                            'SellPriceMin'    : SellPriceMin,
-                            'addressName'     : addressName,
-                            'razaoSocialName' : fantasiaName,
-                            'neighborhood'    : neighborhood
-                            })
 
 def stores_dict():
     tree = ET.parse('./DB/products.xml')
@@ -74,13 +53,60 @@ def stores_dict():
                                          'latitudeNum': longitudeNum}
     return stores
 
-def shop_list_menu():
-    pass
+
+def search_id_list(id_list):
+    result_list = []
+    tree = ET.parse("./DB/products.xml")
+    root = tree.getroot()
+    print root
+    for product_id in id_list:
+        product = root.find('product[id=\''+product_id+'\']')
+        id = product.find('id')
+        if id is not None:
+            id = id.text
+        description = product.find('description')
+        if description is not None:
+            description = description.text
+
+        SellPriceMax = product.find('SellPriceMax')
+        if SellPriceMax is not None:
+            SellPriceMax = SellPriceMax.text
+
+        SellPriceMin = product.find('SellPriceMin')
+        if SellPriceMin is not None:
+            SellPriceMin = SellPriceMin.text
+
+        addressName = product.find('addressName')
+        if addressName is not None:
+            addressName = addressName.text
+
+        razaoSocialName = product.find('razaoSocialName')
+        if razaoSocialName is not None:
+            razaoSocialName = razaoSocialName.text
+
+        neighborhood = product.find('neighborhood')
+        if neighborhood is not None:
+            neighborhood = neighborhood.text
+        result_list.append({'id'              : id,
+                            'description'     : description,
+                            'SellPriceMax'    : SellPriceMax,
+                            'SellPriceMin'    : SellPriceMin,
+                            'addressName'     : addressName,
+                            'razaoSocialName' : razaoSocialName,
+                            'neighborhood'    : neighborhood
+                            })
+    return result_list
+
+
+def shop_list_menu(user):
+    print search_id_list(user.buy_list())
+
 
 def search_product(name):
     product_list = ["1 - Rola de " + name, "2 - Pica de " + name, "3 - Buceta de " + name,
                     "4 - Sua Mae de " + name, "5 - Minha vo de " + name, "6 - Ta no face " + name]
     return product_list
+
 
 def add_product_to_shop_list(product_id):
     print product_id + (" adicionado com sucesso!")
@@ -100,6 +126,7 @@ def search_product_menu():
     product_id = raw_input()
     add_product_to_shop_list(product_id)
 
+
 def intro_menu():
     sys.stdout.flush()
     print right_price_logo
@@ -111,13 +138,21 @@ def intro_menu():
     return nome
 
 def main():
-    logged_off = True
+    client = pymongo.MongoClient("mongodb://mongo:mongol@trab-top-esp-bd-shard-00-00-3bzqm.mongodb.net:27017,trab-top-esp-bd-shard-00-01-3bzqm.mongodb.net:27017,trab-top-esp-bd-shard-00-02-3bzqm.mongodb.net:27017/test?ssl=true&replicaSet=trab-top-esp-bd-shard-0&authSource=admin&retryWrites=true")
+    migration.migrate(client.test)
+
+    # user = User('Marcus', client.test)
+    # try:
+    #     user.favorite_product('2233')
+    # except pymongo.errors.DuplicateKeyError:
+    #     print("Voc j possui este produto adicionado em sua lista.")
+    # print(user.buy_list())
+
     exit_program = False
+    nome = intro_menu()
+    user = User(nome, client.test)
     while exit_program is False:
-        if logged_off is True:
-            nome = intro_menu()
-        logged_off = False
-        print("Bem-vindo, ") + nome + '!\n'
+        print("Bem-vindo, ") + user.name + '!\n'
         print("O que deseja fazer?\n\n"
               "1) Procurar produto\n"
               "2) Lista de Compras\n"
@@ -127,7 +162,7 @@ def main():
         if resposta == '1':
             search_product_menu()
         if resposta == '2':
-            shop_list_menu()
+            shop_list_menu(user)
         if resposta == '3':
             print "\nAte mais, " + nome + '!'
             exit_program = True

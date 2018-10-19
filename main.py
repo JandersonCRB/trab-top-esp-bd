@@ -1,4 +1,3 @@
-
 import xml.etree.ElementTree as ET
 import sys
 from User import User
@@ -7,6 +6,8 @@ import pymongo
 
 right_price_logo = "###################################################################################\n############                        RIGHT$PRICE                        ############\n###################################################################################"
 
+try: raw_input = input
+except NameError: pass
 
 def products_dict():
     tree      = ET.parse("./DB/products.xml")
@@ -58,7 +59,6 @@ def search_id_list(id_list):
     result_list = []
     tree = ET.parse("./DB/products.xml")
     root = tree.getroot()
-    print root
     for product_id in id_list:
         product = root.find('product[id=\''+product_id+'\']')
         id = product.find('id')
@@ -99,7 +99,7 @@ def search_id_list(id_list):
 
 
 def shop_list_menu(user):
-    print search_id_list(user.buy_list())
+    print(search_id_list(user.buy_list()))
 
 
 def search_product(name):
@@ -109,19 +109,19 @@ def search_product(name):
 
 
 def add_product_to_shop_list(product_id):
-    print (product_id) + (" adicionado com sucesso!")
+    print(product_id + " adicionado com sucesso!")
 
 
 def search_product_menu():
     sys.stdout.flush()
-    print (right_price_logo)
+    print(right_price_logo)
     print("\n\n")
 
     print("Digite o nome do produto:\n")
     product_name = raw_input()
     products_list = search_product(product_name)
     for product in products_list:
-        print (product)
+        print(product)
     print("\nDigite o codigo do produto que deseja adicionar a sua lista de compras:")
     product_id = raw_input()
     add_product_to_shop_list(product_id)
@@ -129,7 +129,7 @@ def search_product_menu():
 
 def intro_menu():
     sys.stdout.flush()
-    print (right_price_logo)
+    print(right_price_logo)
     print("\n\n")
     print("Qual seu nome?")
 
@@ -152,7 +152,7 @@ def main():
     nome = intro_menu()
     user = User(nome, client.test)
     while exit_program is False:
-        print("Bem-vindo, ") + (user.name) + ('!\n')
+        print("Bem-vindo, " + user.name + '!\n')
         print("O que deseja fazer?\n\n"
               "1) Procurar produto\n"
               "2) Lista de Compras\n"
@@ -164,8 +164,9 @@ def main():
         if resposta == '2':
             shop_list_menu(user)
         if resposta == '3':
-            print ("\nAte mais, " + nome + '!')
+            print("\nAte mais, " + nome + '!')
             exit_program = True
 
 if __name__ == "__main__":
     main()
+

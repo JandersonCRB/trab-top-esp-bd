@@ -8,6 +8,9 @@ class User:
     def favorite_product(self, product_id):
         return self.db.products.insert_one({'name': self.name, 'product_id': product_id}).inserted_id
 
+    def unfavorite_product(self, product_id):
+        self.db.products.find_one_and_delete({'name': self.name, 'product_id': product_id})
+
     def buy_list(self):
         id_list = []
         for product in self.db.products.find({'name': self.name}):

@@ -1,8 +1,10 @@
+# coding=utf-8
 import xml.etree.ElementTree as ET
 import sys
 from User import User
 import migration
 import pymongo
+import product_search
 
 right_price_logo = "###################################################################################\n############                        RIGHT$PRICE                        ############\n###################################################################################"
 
@@ -102,6 +104,10 @@ def shop_list_menu(user):
     answer = None
     while answer != 'voltar':
         product_dict = search_id_list(user.buy_list())
+        print("################################################# LISTA DE COMPRAS ####################################################\n")
+        if not product_dict:
+            print ("Você nao tem nenhum produto na sua Lista de Compras.\n")
+            break
         for product in product_dict:
             print ("\n\n###################################################################################")
             print (product['id'] + ' - ' + product['description'])
@@ -115,20 +121,8 @@ def shop_list_menu(user):
         print("Deseja deletar algum produto da sua Lista de Compras?      Digite o ID do produto ou 'voltar' se nao desejar")
         answer = raw_input()
         if answer != 'voltar':
-            user.unfavorite(answer)
+            user.unfavorite_product(answer)
 
-
-
-
-def search_product(name):
-    product_list = ["1 - Rola de " + name, "2 - Pica de " + name, "3 - Buceta de " + name,
-                    "4 - Sua Mae de " + name, "5 - Minha vo de " + name, "6 - Ta no face " + name]
-    return (product_list)
-
-
-def add_product_to_shop_list(product_id):
-
-    print(product_id + " adicionado com sucesso!")
 
 
 def search_product_menu(user):
@@ -137,16 +131,18 @@ def search_product_menu(user):
     print("\n\n")
 
     print("Digite o nome do produto:\n")
-    product_name = input()
-    products_list = search_product(product_name)
+    product_name = raw_input()
+    products_list = product_search.product_search(product_name, limit=20)
+    i = 0
     for product in products_list:
-        print(product)
+        print(str(i) + ' - ' + product['name'])
+        i += 1
     print("\nDigite o codigo do produto que deseja adicionar a sua lista de compras:")
-    product_id = input()
+    product_id = int(raw_input())
 
     try:
-        user.favorite_product(product_id)
-        print("Produto " + product_id + " adicionado com sucesso!\n")
+        user.favorite_product(products_list[product_id]['id'])
+        print("Produto " + str(product_id) + " adicionado com sucesso!\n")
 
     except pymongo.errors.DuplicateKeyError:
         print("Voce ja possui este produto adicionado em sua lista.")
@@ -158,7 +154,7 @@ def intro_menu():
     print("\n\n")
     print("Qual seu nome?")
 
-    nome = input()
+    nome = raw_input()
 
     return nome
 
@@ -183,7 +179,7 @@ def main():
               "1) Procurar produto\n"
               "2) Lista de Compras\n"
               "3) Sair")
-        resposta = input()
+        resposta = raw_input()
 
         if resposta == '1':
             search_product_menu(user)

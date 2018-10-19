@@ -105,23 +105,23 @@ def shop_list_menu(user):
 def search_product(name):
     product_list = ["1 - Rola de " + name, "2 - Pica de " + name, "3 - Buceta de " + name,
                     "4 - Sua Mae de " + name, "5 - Minha vo de " + name, "6 - Ta no face " + name]
-    return product_list
+    return (product_list)
 
 
 def add_product_to_shop_list(product_id):
-    print product_id + (" adicionado com sucesso!")
+    print (product_id) + (" adicionado com sucesso!")
 
 
 def search_product_menu():
     sys.stdout.flush()
-    print right_price_logo
+    print (right_price_logo)
     print("\n\n")
 
     print("Digite o nome do produto:\n")
     product_name = raw_input()
     products_list = search_product(product_name)
     for product in products_list:
-        print product
+        print (product)
     print("\nDigite o codigo do produto que deseja adicionar a sua lista de compras:")
     product_id = raw_input()
     add_product_to_shop_list(product_id)
@@ -129,7 +129,7 @@ def search_product_menu():
 
 def intro_menu():
     sys.stdout.flush()
-    print right_price_logo
+    print (right_price_logo)
     print("\n\n")
     print("Qual seu nome?")
 
@@ -152,7 +152,7 @@ def main():
     nome = intro_menu()
     user = User(nome, client.test)
     while exit_program is False:
-        print("Bem-vindo, ") + user.name + '!\n'
+        print("Bem-vindo, ") + (user.name) + ('!\n')
         print("O que deseja fazer?\n\n"
               "1) Procurar produto\n"
               "2) Lista de Compras\n"
@@ -164,7 +164,7 @@ def main():
         if resposta == '2':
             shop_list_menu(user)
         if resposta == '3':
-            print "\nAte mais, " + nome + '!'
+            print ("\nAte mais, " + nome + '!')
             exit_program = True
 
 if __name__ == "__main__":

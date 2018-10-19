@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 import pymongo
-
+from User import User
+import migration
 
 def products_dict(db):
     tree      = ET.parse("./DB/products.xml")
@@ -64,18 +65,12 @@ def save_stores_to_mongo(db):
         print("Tentativa de salvar objeto com chave duplicada no mongoDB.")
 
 
-def readUser():
-    print("Por favor digite seu nome de usuário:")
-
-
 def main():
-    readUser()
     client = pymongo.MongoClient(
         "mongodb://mongo:mongol@trab-top-esp-bd-shard-00-00-3bzqm.mongodb.net:27017,trab-top-esp-bd-shard-00-01-3bzqm.mongodb.net:27017,trab-top-esp-bd-shard-00-02-3bzqm.mongodb.net:27017/test?ssl=true&replicaSet=trab-top-esp-bd-shard-0&authSource=admin&retryWrites=true")
-    client.test.stores.create_index([('razaoSocialName', pymongo.ASCENDING)], unique=True)
-    save_stores_to_mongo(client.test)
-    products_dict(client.test)
-    print("Hello World")
+    migration.migrate(client.test)
+    user = User('Marcus', client.test)
+    user.favorite_product('2222')
 
 
 if __name__ == "__main__":

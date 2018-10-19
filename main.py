@@ -70,7 +70,11 @@ def main():
         "mongodb://mongo:mongol@trab-top-esp-bd-shard-00-00-3bzqm.mongodb.net:27017,trab-top-esp-bd-shard-00-01-3bzqm.mongodb.net:27017,trab-top-esp-bd-shard-00-02-3bzqm.mongodb.net:27017/test?ssl=true&replicaSet=trab-top-esp-bd-shard-0&authSource=admin&retryWrites=true")
     migration.migrate(client.test)
     user = User('Marcus', client.test)
-    user.favorite_product('2222')
+    try:
+        user.favorite_product('2233')
+    except pymongo.errors.DuplicateKeyError:
+        print("Você já possui este produto adicionado em sua lista.")
+    print(user.buy_list())
 
 
 if __name__ == "__main__":

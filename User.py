@@ -9,4 +9,7 @@ class User:
         return self.db.products.insert_one({'name': self.name, 'product_id': product_id}).inserted_id
 
     def buy_list(self):
-        return self.db.products.find({'name': self.name})
+        id_list = []
+        for product in self.db.products.find({'name': self.name}):
+            id_list.append(product["product_id"])
+        return id_list

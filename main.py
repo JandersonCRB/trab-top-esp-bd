@@ -99,7 +99,25 @@ def search_id_list(id_list):
 
 
 def shop_list_menu(user):
-    print(search_id_list(user.buy_list()))
+    answer = None
+    while answer != 'voltar':
+        product_dict = search_id_list(user.buy_list())
+        for product in product_dict:
+            print ("\n\n###################################################################################")
+            print (product['id'] + ' - ' + product['description'])
+            print ('Valor maximo: ' + product['SellPriceMax'])
+            print ('Valor minimo: ' + product['SellPriceMin'])
+            print (product['razaoSocialName'])
+            print (product['addressName'] + ', ' + product['neighborhood'])
+            print ("###################################################################################")
+
+
+        print("Deseja deletar algum produto da sua Lista de Compras?      Digite o ID do produto ou 'voltar' se nao desejar")
+        answer = raw_input()
+        if answer != 'voltar':
+            user.unfavorite(answer)
+
+
 
 
 def search_product(name):
@@ -109,10 +127,11 @@ def search_product(name):
 
 
 def add_product_to_shop_list(product_id):
+
     print(product_id + " adicionado com sucesso!")
 
 
-def search_product_menu():
+def search_product_menu(user):
     sys.stdout.flush()
     print(right_price_logo)
     print("\n\n")
@@ -124,7 +143,13 @@ def search_product_menu():
         print(product)
     print("\nDigite o codigo do produto que deseja adicionar a sua lista de compras:")
     product_id = input()
-    add_product_to_shop_list(product_id)
+
+    try:
+        user.favorite_product(product_id)
+        print("Produto " + product_id + " adicionado com sucesso!\n")
+
+    except pymongo.errors.DuplicateKeyError:
+        print("Voce ja possui este produto adicionado em sua lista.")
 
 
 def intro_menu():
@@ -151,6 +176,7 @@ def main():
     exit_program = False
     nome = intro_menu()
     user = User(nome, client.test)
+    # user.favorite_product('48214')
     while exit_program is False:
         print("Bem-vindo, " + user.name + '!\n')
         print("O que deseja fazer?\n\n"
@@ -160,7 +186,7 @@ def main():
         resposta = input()
 
         if resposta == '1':
-            search_product_menu()
+            search_product_menu(user)
         if resposta == '2':
             shop_list_menu(user)
         if resposta == '3':
